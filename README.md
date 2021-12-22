@@ -30,7 +30,7 @@ echo 'VITE_HASH='${GIT_COMMIT} > .env
 ##### 引入workerjs
 
 ```javascript
-import Workerjs  from 'workerjs-web'
+import Workerjs  from 'worker-web'
 ```
 
 ##### 创建Workjs对象接收以下参数
@@ -45,7 +45,7 @@ import Workerjs  from 'workerjs-web'
 e.g.
 
 ```javascript
-import Workerjs  from 'workerjs-web' 
+import Workerjs  from 'worker-web' 
 let work = new Workerjs({
    commitHash: 'xxxxxxxxxxxx', 
    pollingTime: 1, 

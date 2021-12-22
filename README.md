@@ -38,7 +38,7 @@ import Workerjs  from 'workerjs-web'
 | 参数名      |类型| 是否必填 |默认值 | 说明  |
 | :---------:  | --- | -------- | ---- | ----------------------------- |
 | commitHash  |String| 是       | 无 | 项目中获取或环境变量中的commithash |
-| pollingTime |Number| 否       | 15 | 轮询检查更新时间 |
+| pollingTime |Number| 否       | 15 | 轮询检查更新时间(单位：s) |
 | versionUrl |String| 否 | /version.txt | 默认去找域名根目录的version.txt，如果路径配置不正确，会导致查不到最新的hash值，（不加域名） |
 |onUpdate |Function|否|空函数|捕捉到有新内容更新的函数，可以在里面做提示更新等操作|
 

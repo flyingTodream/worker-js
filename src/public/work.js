@@ -1,28 +1,30 @@
-let commitHash, pollingTime, versionUrl
-function checkUpdate() {
-    fetch(versionUrl + '?time=' + new Date().getTime(), {
-        method: 'GET',
-    })
-        .then((response) => response.text())
-        .then((result) => {
-            if (commitHash.trim() !== result.trim()) {
-                postMessage({
-                    type: 'UPDATE',
-                })
-            }
-        })
-        .catch((error) => console.log('error', error))
-}
+const workjsTemplate =
+    "let commitHash, pollingTime, versionUrl                         \n" +
+    "function checkUpdate() { \n" +
+    "    fetch(versionUrl + '?time=' + new Date().getTime(), { \n" +
+    "        method: 'GET', \n" +
+    "    }) \n" +
+    "        .then((response) => response.text()) \n" +
+    "        .then((result) => {\n" +
+    "            if (commitHash.trim() !== result.trim()) {\n" +
+    "                postMessage({\n" +
+    "                    type: 'UPDATE',\n" +
+    "                })\n" +
+    "            }\n" +
+    "        })\n" +
+    "        .catch((error) => console.log('error', error))\n" +
+    "}\n" +
+    "\n" +
+    "// 监听消息\n" +
+    "onmessage = function (e) {\n" +
+    "    if (e.data.type === 'VERSION' && e.data.hash) {\n" +
+    "        pollingTime = e.data.pollingTime\n" +
+    "        commitHash = e.data.hash\n" +
+    "        versionUrl = e.data.versionUrl\n" +
+    "        setInterval(() => {\n" +
+    "            checkUpdate()\n" +
+    "        }, pollingTime * 1000)\n" +
+    "    }\n" +
+    "}\n"
 
-// 监听消息
-onmessage = function (e) {
-    if (e.data.type === 'VERSION' && e.data.hash) {
-        console.log(e.data)
-        pollingTime = e.data.pollingTime
-        commitHash = e.data.hash
-        versionUrl = e.data.versionUrl
-        setInterval(() => {
-            checkUpdate()
-        }, pollingTime * 1000)
-    }
-}
+export default workjsTemplate

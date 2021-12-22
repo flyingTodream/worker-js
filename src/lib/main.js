@@ -1,46 +1,53 @@
-// default options
-const DEFAUTL_OPTIONS = {
-    commitHash: null,
-    onError(msg) {
-        console.error(msg)
-    }, onUpdate() { },
-    pollingTime: 15,
-    versionUrl: '/version.txt'
-}
-export default async function createWorkjs(opts) {
-    let options = Object.assign({}, DEFAUTL_OPTIONS, opts);
-    if (window.Worker) {
-        if (options.commitHash) {
-            const codeString = await fetch('https://static.flytodream.cn/work.js').then(res => res.text());
-            // 因此不再会有跨域问题
-            const localWorkerUrl = window.URL.createObjectURL(new Blob([codeString], {
+import workjsTemplate from '../public/work.js'
+export default class Workerjs {
+    constructor(opt) {
+        if (!opt.commitHash) {
+            this.error('commitHash is required')
+        }
+        let onUpdate = () => {
+            console.log('update')
+        }
+        this.commitHash = opt.commitHash
+        this.pollingTime = opt.pollingTime || 15
+        this.versionUrl = opt.versionUrl || '/version.txt'
+        this.onUpdate = opt.onUpdate || onUpdate
+        this.myWork = undefined
+    }
+    // 创建worker线程
+    createWorkerjs() {
+        if (!this.commitHash) return
+        if (window.Worker) {
+            const localWorkerUrl = window.URL.createObjectURL(new Blob([workjsTemplate], {
                 type: 'application/javascript'
             }));
-            let myWork = new Worker(localWorkerUrl)
-            myWork.postMessage({
+            this.myWork = new Worker(localWorkerUrl)
+            this.myWork.postMessage({
                 type: 'VERSION',
-                hash: options.commitHash,
-                pollingTime: options.pollingTime,
-                versionUrl: options.versionUrl
+                hash: this.commitHash,
+                pollingTime: this.pollingTime,
+                versionUrl: window.location.origin + this.versionUrl
             })
-            myWork.onmessage = async (e) => {
+            this.myWork.onmessage = async (e) => {
                 const message = e.data
                 if (message.type && message.type === 'UPDATE') {
                     try {
-                        await options.onUpdate()
+                        await this.onUpdate()
                     } catch (error) {
-                        options.onError(error)
+                        this.error(error)
                     } finally {
-                        // 关闭worker线程
-                        myWork.terminate()
-                        myWork = undefined
+                        this.close()
                     }
                 }
             }
         } else {
-            options.onError('commitHash is required')
+            this.error('Your browser does not support web workers.')
         }
-    } else {
-        options.onError('Your browser does not support web workers.')
+    }
+    error(msg) {
+        console.error(msg)
+    }
+    close() {
+        this.myWork.terminate()
+        this.myWork = undefined
     }
 }

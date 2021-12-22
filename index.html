@@ -10,7 +10,7 @@
 
 <body>
     <script>
-       // default options
+    //    default options
 const DEFAUTL_OPTIONS = {
     commitHash: null,
     onError(msg) {
@@ -19,43 +19,50 @@ const DEFAUTL_OPTIONS = {
     pollingTime: 15,
     versionUrl: '/version.txt'
 }
-async function createWorkjs(opts) {
-    let options = Object.assign({}, DEFAUTL_OPTIONS, opts);
-    if (window.Worker) {
-        if (options.commitHash) {
-            const codeString = await fetch('https://static.flytodream.cn/work.js').then(res => res.text());
+
+  async function createWorkjs(opt) {
+    const codeString = await fetch('https://static.flytodream.cn/work.js').then(res => res.text());
             // 因此不再会有跨域问题
             const localWorkerUrl = window.URL.createObjectURL(new Blob([codeString], {
                 type: 'application/javascript'
             }));
-            let myWork = new Worker(localWorkerUrl)
-            myWork.postMessage({
+            console.log(codeString)
+        if (!this.commitHash) return
+        if(window.Worker){
+            
+            this.myWork = new Worker(localWorkerUrl)
+            console.log(this.myWork)
+            this.myWork.postMessage({
                 type: 'VERSION',
-                hash: options.commitHash,
-                pollingTime: options.pollingTime,
-                versionUrl: options.versionUrl
+                hash: this.commitHash,
+                pollingTime: this.pollingTime,
+                versionUrl: this.versionUrl
             })
-            myWork.onmessage = async (e) => {
+            this.myWork.onmessage = async (e) => {
                 const message = e.data
+                console.log('onmessage')
                 if (message.type && message.type === 'UPDATE') {
                     try {
-                        await options.onUpdate()
+                        await this.onUpdate()
                     } catch (error) {
-                        options.onError(error)
-                    } finally {
-                        // 关闭worker线程
-                        // myWork.terminate()
-                        // myWork = undefined
+                        this.error(error)
+                    } finally{
+                        this.close()
                     }
                 }
             }
-        } else {
-            options.onError('commitHash is required')
+        }else{
+            this.error('Your browser does not support web workers.')
         }
-    } else {
-        options.onError('Your browser does not support web workers.')
     }
-}
+
+// let work = new workjs({
+//     commitHash: '2232323',
+//     onUpdate: () => {
+//         console.log('-----')
+//     }
+// })
+// console.log()
         createWorkjs({commitHash: '2232323', pollingTime: 1, versionUrl: 'https://pass.flytodream.cn/js/chunk-vendors.28b7964b.js'})
     </script>
 </body>

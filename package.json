@@ -1,6 +1,6 @@
 {
-  "name": "workerjs-web",
-  "version": "0.0.1",
+  "name": "worker-web",
+  "version": "0.1.0",
   "author": "flyingTodream",
   "github": "https://github.com/flyingTodream/worker-js.git",
   "repository": {
@@ -9,7 +9,8 @@
   },
   "keywords": [
     "worker",
-    "web worker"
+    "web worker",
+    "workerjs"
   ],
   "description": "a workerjs plugin",
   "bugs": {
@@ -19,6 +20,7 @@
   "main": "./index.js",
   "module": "./index.js",
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+  },
   "license": "MIT"
 }

@@ -1,3 +1,3 @@
-import createWorkjs from "./src/lib/main";
+import Workerjs from "./src/lib/main";
 
-export default createWorkjs
+export default Workerjs

@@ -47,7 +47,12 @@ export default class Workerjs {
         console.error(msg)
     }
     close() {
-        this.myWork.terminate()
-        this.myWork = undefined
+        if (this.myWork) {
+            this.myWork.terminate()
+            this.myWork = undefined
+        } else {
+            this.error('The worker thread has been closed.')
+        }
+
     }
 }

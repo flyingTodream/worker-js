@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "es2015",
+        "module": "es2015",
+        "moduleResolution": "node",
+        "strict": true,
+        "jsx": "preserve",
+        "sourceMap": false,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "lib": ["esnext", "dom"],
+        "suppressImplicitAnyIndexErrors": true,
+        "outDir": ""
+    },
+    "include": ["src/**/*.ts", "src/**/*.d.ts"]
+}

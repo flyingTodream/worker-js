@@ -1,7 +1,11 @@
 {
   "name": "worker-web",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "author": "flyingTodream",
+  "scripts": {
+    "test": "NODE_ENV=test jest --detectOpenHandles",
+    "build": "tsc -d"
+  },
   "github": "https://github.com/flyingTodream/worker-js.git",
   "repository": {
     "type": "git",
@@ -19,8 +23,10 @@
   "homepage": "https://github.com/flyingTodream/worker-js.git",
   "main": "./index.js",
   "module": "./index.js",
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
+    "typescript": "^4.5.4"
   },
   "license": "MIT"
 }

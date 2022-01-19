@@ -1,7 +1,8 @@
 {
   "name": "worker-web",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "author": "flyingTodream",
+  "type": "module",
   "scripts": {
     "test": "NODE_ENV=test jest --detectOpenHandles",
     "build": "tsc -d"
@@ -21,7 +22,7 @@
     "url": "https://github.com/flyingTodream/worker-js/issues"
   },
   "homepage": "https://github.com/flyingTodream/worker-js.git",
-  "main": "./index.js",
+  "exports": "./index.js",
   "module": "./index.js",
   "dependencies": {
   },

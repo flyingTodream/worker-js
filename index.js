@@ -26,7 +26,7 @@ const workjsTemplate = "let commitHash, pollingTime, versionUrl                 
     "    }) \n" +
     "        .then((response) => response.text()) \n" +
     "        .then((result) => {\n" +
-    "            if (commitHash.trim() !== result.trim()) {\n" +
+    "            if (result.trim() && commitHash.trim() !== result.trim()) {\n" +
     "                postMessage({\n" +
     "                    type: 'UPDATE',\n" +
     "                })\n" +

@@ -7,7 +7,7 @@ const workjsTemplate =
     "        .then((response) => response.text()) \n" +
     "        .then((result) => { \n" +
     "            const data = result.trim().split(/\\n/) \n" +
-    "            if (data.length > 0 && data[0].trim() && commitHash.trim() !== result.trim()) {\n" +
+    "            if (data.length > 0 && data[0].trim() && commitHash.trim() !== data[0].trim()) {\n" +
     "                postMessage({\n" +
     "                    type: 'UPDATE',\n" +
     "                    updateMessage: data[1] || null \n" + 

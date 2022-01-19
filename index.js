@@ -25,10 +25,12 @@ const workjsTemplate = "let commitHash, pollingTime, versionUrl                 
     "        method: 'GET', \n" +
     "    }) \n" +
     "        .then((response) => response.text()) \n" +
-    "        .then((result) => {\n" +
-    "            if (result.trim() && commitHash.trim() !== result.trim()) {\n" +
+    "        .then((result) => { \n" +
+    "            const data = result.trim().split(/\\n/) \n" +
+    "            if (data.length > 0 && data[0].trim() && commitHash.trim() !== result.trim()) {\n" +
     "                postMessage({\n" +
     "                    type: 'UPDATE',\n" +
+    "                    updateMessage: data[1] || null \n" +
     "                })\n" +
     "            }\n" +
     "        })\n" +
@@ -53,7 +55,7 @@ export default class Workerjs {
         if (!opt.commitHash) {
             __classPrivateFieldGet(this, _Workerjs_instances, "m", _Workerjs__error).call(this, 'commitHash is required');
         }
-        let onUpdate = () => {
+        let onUpdate = (message) => {
             console.log('update');
         };
         this.commitHash = opt.commitHash;
@@ -81,7 +83,7 @@ export default class Workerjs {
                 const message = e.data;
                 if (message.type && message.type === 'UPDATE') {
                     try {
-                        yield this.onUpdate();
+                        yield this.onUpdate(message.updateMessage || '');
                     }
                     catch (error) {
                         __classPrivateFieldGet(this, _Workerjs_instances, "m", _Workerjs__error).call(this, error);

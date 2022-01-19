@@ -5,10 +5,12 @@ const workjsTemplate =
     "        method: 'GET', \n" +
     "    }) \n" +
     "        .then((response) => response.text()) \n" +
-    "        .then((result) => {\n" +
-    "            if (result.trim() && commitHash.trim() !== result.trim()) {\n" +
+    "        .then((result) => { \n" +
+    "            const data = result.trim().split(/\\n/) \n" +
+    "            if (data.length > 0 && data[0].trim() && commitHash.trim() !== result.trim()) {\n" +
     "                postMessage({\n" +
     "                    type: 'UPDATE',\n" +
+    "                    updateMessage: data[1] || null \n" + 
     "                })\n" +
     "            }\n" +
     "        })\n" +
@@ -31,14 +33,14 @@ export default class Workerjs {
     commitHash: string;
     pollingTime: number;
     versionUrl: string;
-    onUpdate: Function;
+    onUpdate: (message?: string | null) =>{};
     #myWork: any;
 
     constructor(opt: any) {
         if (!opt.commitHash) {
             this.#_error('commitHash is required')
         }
-        let onUpdate = () => {
+        let onUpdate = (message?: string | null) => {
             console.log('update')
         }
         this.commitHash = opt.commitHash
@@ -65,7 +67,7 @@ export default class Workerjs {
                 const message = e.data
                 if (message.type && message.type === 'UPDATE') {
                     try {
-                        await this.onUpdate()
+                        await this.onUpdate(message.updateMessage || '')
                     } catch (error) {
                         this.#_error(error)
                     } finally {

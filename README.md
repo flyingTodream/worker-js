@@ -23,9 +23,14 @@ Web Work会为javascript创建多线程环境，不会阻塞主线程，影响�
 [jenkins打包环境git变量参考](https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/Complete-Jenkins-Git-environment-variables-list-for-batch-jobs-and-shell-script-builds)
 
 ```bash
-echo ${GIT_COMMIT} > public/version.txt
+echo ${GIT_COMMIT} > public/version.txt    // commit hash 为避免项目本身version.txt里面有内容，第一步直接覆盖文件
+git log --oneline -1  >> public/version.txt // commit message
 echo 'VITE_HASH='${GIT_COMMIT} > .env
 ```
+
+<u>**注：commit hash 必须在 commit message之前，commit message可不传。**</u>
+
+<u>**“>”会覆盖原文件 ，“>>”是在原文件基础上追加至文件尾部**</u> 
 
 ##### 引入workerjs
 
@@ -40,7 +45,7 @@ import Workerjs  from 'worker-web'
 | commitHash  |String| 是       | 无 | 项目中获取或环境变量中的commithash |
 | pollingTime |Number| 否       | 15 | 轮询检查更新时间(单位：s) |
 | versionUrl |String| 否 | /version.txt | 默认去找域名根目录的version.txt，如果路径配置不正确，会导致查不到最新的hash值，（不加域名） |
-|onUpdate |Function|否|空函数|捕捉到有新内容更新的函数，可以在里面做提示更新等操作|
+|onUpdate |(message: string) => {}|否|空函数|捕捉到有新内容更新的回调函数，可以在里面做提示更新等操作，参数为更新日志，无更新日志时，值为空字符串|
 
 e.g.
 
@@ -50,12 +55,12 @@ let work = new Workerjs({
    commitHash: 'xxxxxxxxxxxx', 
    pollingTime: 1, 
    versionUrl: '/version.txt',
-   onUpdate: () => {}
+   onUpdate: (message: string) => {}
 })
 work.createWorkerjs()
 ```
 
-#### 暴露方法
+#### 方法
 
 **createWorkerjs**
 创建worker线程

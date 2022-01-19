@@ -3,7 +3,7 @@ export default class Workerjs {
     commitHash: string;
     pollingTime: number;
     versionUrl: string;
-    onUpdate: Function;
+    onUpdate: (message?: string | null) => {};
     constructor(opt: any);
     createWorkerjs(): void;
     close(): void;
